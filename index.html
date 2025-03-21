@@ -1,1 +1,80 @@
-“my first page”
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Animation</title>
+    <style>
+        #balloon-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            border: 1px solid #000;
+        }
+
+       .balloon {
+            position: absolute;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="balloon-container"></div>
+    <script>
+        const balloonCount = 10;
+        const container = document.getElementById('balloon-container');
+
+        for (let i = 0; i < balloonCount; i++) {
+            const balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            balloon.style.width = '30px';
+            balloon.style.height = '30px';
+            balloon.style.left = Math.random() * (container.offsetWidth - 30) + 'px';
+            balloon.style.top = container.offsetHeight + 'px';
+            balloon.style.backgroundColor = getRandomColor();
+            container.appendChild(balloon);
+
+            animateBalloon(balloon);
+        }
+
+        function animateBalloon(balloon) {
+            const speed = Math.random() * 3 + 1; 
+            const changeSizeInterval = setInterval(() => {
+                const randomSize = Math.random() * 30 + 20; 
+                balloon.style.width = randomSize + 'px';
+                balloon.style.height = randomSize + 'px';
+            }, 1500);
+            const changeColorInterval = setInterval(() => {
+                balloon.style.backgroundColor = getRandomColor();
+            }, 2000);
+
+            const moveInterval = setInterval(() => {
+                const currentTop = parseInt(balloon.style.top);
+                balloon.style.top = (currentTop - speed) + 'px';
+                if (currentTop <= -30) {
+                    balloon.style.top = container.offsetHeight + 'px';
+                    balloon.style.left = Math.random() * (container.offsetWidth - 30) + 'px';
+                }
+            }, 50);
+
+            window.addEventListener('beforeunload', () => {
+                clearInterval(changeSizeInterval);
+                clearInterval(changeColorInterval);
+                clearInterval(moveInterval);
+            });
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+</body>
+
+</html>
